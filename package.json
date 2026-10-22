@@ -1,0 +1,12 @@
+{
+  "name": "dashbot",
+  "version": "1.0.0",
+  "description": "Multi-function Discord Bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1"
+  }
+}
