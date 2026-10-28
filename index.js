@@ -12,13 +12,13 @@ const {
     ComponentType
 } = require('discord.js');
 
-// Petit serveur web pour afficher "* Bot en ligne *" (Requis pour certains hébergeurs)
+// Small web server to keep the bot alive on cloud hosts
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
-    res.send('* Bot en ligne *');
+    res.send('* Bot Online *');
 });
 
 app.listen(PORT, () => {
@@ -110,7 +110,7 @@ function isStaff(member) {
 
 // --- INTERACTION HANDLING ---
 client.on('interactionCreate', async interaction => {
-    // 1. Gestion du Menu Déroulant (Rôle Staff)
+    // 1. Handling Role Select Menu Interaction
     if (interaction.isRoleSelectMenu()) {
         if (interaction.customId === 'select_staff_role') {
             if (interaction.guild.ownerId !== interaction.user.id) {
@@ -126,7 +126,7 @@ client.on('interactionCreate', async interaction => {
             const updatedEmbed = new EmbedBuilder()
                 .setColor(0x23A55A)
                 .setTitle('⚙️ DashBot Control Panel')
-                .setDescription(`✅ **Success:** The Staff role has been updated to <@&${selectedRoleId}>.\n\nHere are the available configuration features:`)
+                .setDescription(`✅ **Success:** The Staff role has been updated to <@&${selectedRoleId}>.\n\nHere are the available features:`)
                 .addFields(
                     { name: '🛡️ Staff Role', value: `<@&${selectedRoleId}>`, inline: true },
                     { name: '🔮 Upcoming Features', value: '*More modules coming soon...*', inline: true }
@@ -135,7 +135,7 @@ client.on('interactionCreate', async interaction => {
             const row = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setCustomId('btn_config_staff')
-                    .setLabel('Modifier le Rôle Staff')
+                    .setLabel('Change Staff Role')
                     .setStyle(ButtonStyle.Primary)
             );
 
@@ -143,7 +143,7 @@ client.on('interactionCreate', async interaction => {
         }
     }
 
-    // 2. Gestion des Boutons du Panel /setup
+    // 2. Handling Button Interaction for /setup panel
     if (interaction.isButton()) {
         if (interaction.customId === 'btn_config_staff') {
             if (interaction.guild.ownerId !== interaction.user.id) {
@@ -155,14 +155,14 @@ client.on('interactionCreate', async interaction => {
 
             const roleSelect = new RoleSelectMenuBuilder()
                 .setCustomId('select_staff_role')
-                .setPlaceholder('Sélectionnez le rôle Staff...')
+                .setPlaceholder('Select the Staff role...')
                 .setMinValues(1)
                 .setMaxValues(1);
 
             const row = new ActionRowBuilder().addComponents(roleSelect);
 
             return interaction.reply({
-                content: 'Veuillez sélectionner le nouveau rôle Staff ci-dessous :',
+                content: 'Please select the new Staff role below:',
                 components: [row],
                 ephemeral: true
             });
@@ -183,21 +183,21 @@ client.on('interactionCreate', async interaction => {
         }
 
         const currentRoleId = staffRoles.get(guild.id);
-        const staffRoleDisplay = currentRoleId ? `<@&${currentRoleId}>` : '❌ *Non configuré*';
+        const staffRoleDisplay = currentRoleId ? `<@&${currentRoleId}>` : '❌ *Not configured*';
 
         const embed = new EmbedBuilder()
             .setColor(0x5865F2)
             .setTitle('⚙️ DashBot Control Panel')
-            .setDescription('Bienvenue sur le panneau de configuration de votre serveur. Utilisez les boutons ci-dessous pour gérer les fonctionnalités du bot.')
+            .setDescription('Welcome to your server control panel. Use the buttons below to manage bot features.')
             .addFields(
-                { name: '🛡️ Rôle Staff Actuel', value: staffRoleDisplay, inline: true },
-                { name: '🔮 Prochaines fonctionnalités', value: 'D\'autres options et modules seront ajoutés ici prochainement.', inline: false }
+                { name: '🛡️ Current Staff Role', value: staffRoleDisplay, inline: true },
+                { name: '🔮 Upcoming Features', value: 'More options and modules will be added here soon.', inline: false }
             );
 
         const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
                 .setCustomId('btn_config_staff')
-                .setLabel('Configurer le rôle Staff')
+                .setLabel('Configure Staff Role')
                 .setStyle(ButtonStyle.Primary)
         );
 
